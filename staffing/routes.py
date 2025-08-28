@@ -378,3 +378,6 @@ def edit_placement(_id: int):
 def delete_placement(_id: int):
     delete_methods.delete_placement(_id)
     return redirect(url_for(".placements"))
+
+
+# Test Commitments
