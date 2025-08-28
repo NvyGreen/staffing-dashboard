@@ -140,7 +140,10 @@ def place_employee(new_placement):
         "created_at": new_placement.created_at.isoformat(),
         "updated_at": new_placement.updated_at.isoformat()
     }
-
     cursor = current_app.db.execute(query, values)
+
+    query = """UPDATE job SET status = :status WHERE job_id = :job_id;"""
+    cursor = current_app.db.execute(query, {"status": "filled", "job_id": new_placement.job_id})
+
     current_app.db.commit()
     cursor.close()
