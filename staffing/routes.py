@@ -218,7 +218,7 @@ def edit_client(_id: int):
             address=form.address.data,
             terms=form.terms.data,
             industry=form.industry.data,
-            status="Active",
+            status="Active",              # Not used
             created_at=datetime.now(),    # Not used
             updated_at=datetime.now()
         )
@@ -242,7 +242,7 @@ def delete_client(_id: int):
 
 @pages.route("/employee/<int:_id>", methods=["GET", "POST"])
 def edit_employee(_id: int):
-    form = EditEmployee()
+    form = AddEmployee()
     employee = edit_methods.get_employee(_id)
 
     if request.method == "GET":
@@ -253,7 +253,6 @@ def edit_employee(_id: int):
         form.pay_rate.data = employee[4]
         form.bill_rate.data = employee[5]
         form.title.data = employee[6]
-        form.status.data = employee[7]
     
 
     if form.validate_on_submit():
@@ -265,7 +264,7 @@ def edit_employee(_id: int):
             pay_rate=form.pay_rate.data,
             bill_rate=form.bill_rate.data,
             title=form.title.data,
-            status=form.status.data,
+            status="Standby",             # Not used
             created_at=datetime.now(),    # Not used
             updated_at=datetime.now()
         )

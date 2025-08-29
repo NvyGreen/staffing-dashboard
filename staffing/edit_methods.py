@@ -10,7 +10,7 @@ def get_client(client_id):
 
 
 def update_client(client_id, update_info):
-    query = """UPDATE client SET client_name = :client_name, contact_name = :contact_name, contact_email = :email, contact_phone = :phone, billing_address = :address, billing_terms = :terms, industry = :industry, status = :status, updated_at = :updated_at WHERE client_id = :client_id;"""
+    query = """UPDATE client SET client_name = :client_name, contact_name = :contact_name, contact_email = :email, contact_phone = :phone, billing_address = :address, billing_terms = :terms, industry = :industry, updated_at = :updated_at WHERE client_id = :client_id;"""
     values = {
         "client_id": client_id,
         "client_name": update_info.client_name,
@@ -20,7 +20,6 @@ def update_client(client_id, update_info):
         "address": update_info.address,
         "terms": update_info.terms,
         "industry": update_info.industry,
-        "status": "Active",
         "updated_at": update_info.updated_at.isoformat()
     }
 
@@ -38,7 +37,7 @@ def get_employee(employee_id):
 
 
 def update_employee(employee_id, update_info):
-    query = """UPDATE employee SET full_name = :full_name, email = :email, phone = :phone, rate_type = :rate_type, default_bill_rate = :bill_rate, default_pay_rate = :pay_rate, role_title = :title, status = :status, updated_at = :updated_at WHERE employee_id = :employee_id;"""
+    query = """UPDATE employee SET full_name = :full_name, email = :email, phone = :phone, rate_type = :rate_type, default_bill_rate = :bill_rate, default_pay_rate = :pay_rate, role_title = :title, updated_at = :updated_at WHERE employee_id = :employee_id;"""
     values = {
         "employee_id": employee_id,
         "full_name": update_info.full_name,
@@ -48,7 +47,6 @@ def update_employee(employee_id, update_info):
         "bill_rate": float(update_info.bill_rate),
         "pay_rate": float(update_info.pay_rate),
         "title": update_info.title,
-        "status": update_info.status,
         "updated_at": update_info.updated_at.isoformat()
     }
 
