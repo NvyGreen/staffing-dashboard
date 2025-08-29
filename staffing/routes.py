@@ -197,7 +197,7 @@ def add_placement():
 
 @pages.route("/client/<int:_id>", methods=["GET", "POST"])
 def edit_client(_id: int):
-    form = EditClient()
+    form = AddClient()
     client = edit_methods.get_client(_id)
 
     if request.method == "GET":
@@ -208,7 +208,6 @@ def edit_client(_id: int):
         form.address.data = client[4]
         form.terms.data = client[5]
         form.industry.data = client[6]
-        form.status.data = client[7]
 
     if form.validate_on_submit():
         edited_client = Client(
@@ -219,7 +218,7 @@ def edit_client(_id: int):
             address=form.address.data,
             terms=form.terms.data,
             industry=form.industry.data,
-            status=form.status.data,
+            status="Active",
             created_at=datetime.now(),    # Not used
             updated_at=datetime.now()
         )

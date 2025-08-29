@@ -20,7 +20,6 @@
         {{ render_text_field(form.address) }}
         {{ render_text_field(form.terms) }}
         {{ render_text_field(form.industry) }}
-        {{ render_text_field(form.status) }}
 
         <div class="form__footer">
             <a href="{{ url_for('pages.delete_client', _id=client_id) }}" class="form__delete">Delete</a>

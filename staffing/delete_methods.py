@@ -10,8 +10,8 @@ def delete_client(client_id):
         for job in jobs:
             delete_job(job[0])
     
-    query = """DELETE FROM client WHERE client_id = :client_id;"""
-    cursor = current_app.db.execute(query, {"client_id": client_id})
+    query = """UPDATE client SET status = :status WHERE client_id = :client_id;"""
+    cursor = current_app.db.execute(query, {"client_id": client_id, "status": "Inactive"})
     current_app.db.commit()
     cursor.close()
 
@@ -25,8 +25,8 @@ def delete_employee(employee_id):
         for placement in placements:
             delete_placement(placement[0])
     
-    query = """DELETE FROM employee WHERE employee_id = :employee_id;"""
-    cursor = current_app.db.execute(query, {"employee_id": employee_id})
+    query = """UPDATE employee SET status = :status WHERE employee_id = :employee_id;"""
+    cursor = current_app.db.execute(query, {"employee_id": employee_id, "status": "Inactive"})
     current_app.db.commit()
     cursor.close()
 
@@ -40,8 +40,8 @@ def delete_job(job_id):
         for placement in placements:
             delete_placement(placement[0])
     
-    query = """DELETE FROM job WHERE job_id = :job_id;"""
-    cursor = current_app.db.execute(query, {"job_id": job_id})
+    query = """UPDATE job SET status = :status WHERE job_id = :job_id;"""
+    cursor = current_app.db.execute(query, {"job_id": job_id, "status": "closed"})
     current_app.db.commit()
     cursor.close()
 
@@ -54,7 +54,7 @@ def delete_placement(placement_id):
     query = """UPDATE job SET status = :status WHERE job_id = :job_id;"""
     cursor = current_app.db.execute(query, {"job_id": job_id, "status": "open"})
     
-    query = """DELETE FROM placement WHERE placement_id = :placement_id;"""
-    cursor = current_app.db.execute(query, {"placement_id": placement_id})
+    query = """UPDATE placement SET status = :status WHERE placement_id = :placement_id;"""
+    cursor = current_app.db.execute(query, {"placement_id": placement_id, "status": "Ended"})
     current_app.db.commit()
     cursor.close()

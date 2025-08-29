@@ -87,7 +87,7 @@ class EditEmployee(FlaskForm):
     title = StringField("Role Title")
     status = SelectField("Status", choices=[
         ("Active", "Active"),
-        ("Inactive", "Inactive")
+        ("Standby", "Standby")
     ])
 
     submit = SubmitField("Save Changes")

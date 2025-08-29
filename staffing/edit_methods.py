@@ -20,7 +20,7 @@ def update_client(client_id, update_info):
         "address": update_info.address,
         "terms": update_info.terms,
         "industry": update_info.industry,
-        "status": update_info.status,
+        "status": "Active",
         "updated_at": update_info.updated_at.isoformat()
     }
 
