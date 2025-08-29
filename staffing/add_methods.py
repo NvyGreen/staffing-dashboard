@@ -145,5 +145,8 @@ def place_employee(new_placement):
     query = """UPDATE job SET status = :status WHERE job_id = :job_id;"""
     cursor = current_app.db.execute(query, {"status": "filled", "job_id": new_placement.job_id})
 
+    query = """UPDATE employee SET status = :status WHERE employee_id = :employee_id;"""
+    cursor = current_app.db.execute(query, {"status": "Active", "employee_id": new_placement.employee_id})
+
     current_app.db.commit()
     cursor.close()

@@ -123,7 +123,7 @@ def add_employee():
             pay_rate=form.pay_rate.data,
             bill_rate=form.bill_rate.data,
             title=form.title.data,
-            status="Active",
+            status="Standby",
             created_at=datetime.now(),
             updated_at=datetime.now()
         )
