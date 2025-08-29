@@ -15,7 +15,6 @@
 
         {{ render_text_field(form.client_role) }}
         {{ render_text_field(form.employee) }}
-        {{ render_text_field(form.status) }}
 
         <div class="form__footer">
             <a href="{{ url_for('pages.delete_placement', _id=placement_id) }}" class="form__delete">Delete</a>

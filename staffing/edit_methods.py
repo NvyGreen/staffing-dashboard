@@ -89,7 +89,7 @@ def update_job(job_id, update_info):
 
 
 def get_placement(placement_id):
-    query = """SELECT job_id, employee_id, status FROM placement WHERE placement_id = :placement_id;"""
+    query = """SELECT job_id, employee_id FROM placement WHERE placement_id = :placement_id;"""
     cursor = current_app.db.execute(query, {"placement_id": placement_id})
     placement = cursor.fetchone()
     cursor.close()
@@ -97,12 +97,11 @@ def get_placement(placement_id):
 
 
 def update_placement(placement_id, update_info):
-    query = """UPDATE placement SET job_id = :job_id, employee_id = :employee_id, status = :status, updated_at = :updated_at WHERE placement_id = :placement_id;"""
+    query = """UPDATE placement SET job_id = :job_id, employee_id = :employee_id, updated_at = :updated_at WHERE placement_id = :placement_id;"""
     values = {
         "placement_id": placement_id,
         "job_id": update_info.job_id,
         "employee_id": update_info.employee_id,
-        "status": update_info.status,
         "updated_at": update_info.updated_at.isoformat()
     }
     cursor = current_app.db.execute(query, values)

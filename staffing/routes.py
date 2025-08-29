@@ -340,7 +340,7 @@ def delete_job(_id: int):
 
 @pages.route("/placement/<int:_id>", methods=["GET", "POST"])
 def edit_placement(_id: int):
-    form = EditPlacement()
+    form = PlaceEmployee()
     form.client_role.choices = add_methods.get_job_dropdown()
     form.employee.choices = add_methods.get_employee_dropdown()
     placement = edit_methods.get_placement(_id)
@@ -348,14 +348,13 @@ def edit_placement(_id: int):
     if request.method == "GET":
         form.client_role.data=str(placement[0])
         form.employee.data=str(placement[1])
-        form.status.data=placement[2]
     
 
     if form.validate_on_submit():
         updated_placement = Placement(
             job_id=int(form.client_role.data),
             employee_id=int(form.employee.data),
-            status=form.status.data,
+            status="Active",              # Not used
             created_at=datetime.now(),    # Not used
             updated_at=datetime.now()
         )
