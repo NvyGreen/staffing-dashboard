@@ -3,24 +3,24 @@ from datetime import datetime, date
 
 
 def get_client_info():
-    query = """SELECT client_id, client_name, contact_name, contact_email, contact_phone, billing_address, billing_terms, industry, status FROM client;"""
-    cursor = current_app.db.execute(query)
+    query = """SELECT client_id, client_name, contact_name, contact_email, contact_phone, billing_address, billing_terms, industry, status FROM client WHERE status = :status;"""
+    cursor = current_app.db.execute(query, {"status": "Active"})
     clients = cursor.fetchall()
     cursor.close()
     return clients
 
 
 def get_employee_info():
-    query = """SELECT employee_id, full_name, email, phone, rate_type, default_pay_rate, default_bill_rate, role_title, status FROM employee;"""
-    cursor = current_app.db.execute(query)
+    query = """SELECT employee_id, full_name, email, phone, rate_type, default_pay_rate, default_bill_rate, role_title, status FROM employee WHERE status = :stat1 OR status = :stat2;"""
+    cursor = current_app.db.execute(query, {"stat1": "Active", "stat2": "Standby"})
     employees = cursor.fetchall()
     cursor.close()
     return employees
 
 
 def get_job_info():
-    query = """SELECT job_id, client_id, position_title, staff_type, location, bill_rate, pay_rate, currency, start_date, end_date, status, notes FROM job;"""
-    cursor = current_app.db.execute(query)
+    query = """SELECT job_id, client_id, position_title, staff_type, location, bill_rate, pay_rate, currency, start_date, end_date, status, notes FROM job WHERE status = :stat1 OR status = :stat2;"""
+    cursor = current_app.db.execute(query, {"stat1": "open", "stat2": "filled"})
     jobs_tup = cursor.fetchall()
     cursor.close()
 
@@ -61,8 +61,8 @@ def clean_job(raw_job):
 
 
 def get_placement_info():
-    query = """SELECT placement_id, job_id, employee_id, start_date, end_date, bill_rate, pay_rate, status FROM placement;"""
-    cursor = current_app.db.execute(query)
+    query = """SELECT placement_id, job_id, employee_id, start_date, end_date, bill_rate, pay_rate, status FROM placement WHERE status = :status;"""
+    cursor = current_app.db.execute(query, {"status": "Active"})
     placements_tup = cursor.fetchall()
     cursor.close()
 
