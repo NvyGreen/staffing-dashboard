@@ -288,7 +288,7 @@ def delete_employee(_id: int):
 
 @pages.route("/job/<int:_id>", methods=["GET", "POST"])
 def edit_job(_id: int):
-    form = EditJob()
+    form = AddJob()
     form.client.choices = add_methods.get_client_dropdown()
     job = edit_methods.get_job(_id)
 
@@ -302,8 +302,7 @@ def edit_job(_id: int):
         form.currency.data = job[6]
         form.start_date.data = date.fromisoformat(job[7])
         form.end_date.data = date.fromisoformat(job[8])
-        form.status.data = job[9]
-        form.notes.data = job[10]
+        form.notes.data = job[9]
     
     if form.validate_on_submit():
         updated_job = Job(
@@ -316,7 +315,7 @@ def edit_job(_id: int):
             currency=form.currency.data,
             start_date=form.start_date.data,
             end_date=form.end_date.data,
-            status=form.status.data,
+            status="open",                # Not used
             notes=form.notes.data,
             created_at=datetime.now(),    # Not used
             updated_at=datetime.now()

@@ -56,7 +56,7 @@ def update_employee(employee_id, update_info):
 
 
 def get_job(job_id):
-    query = """SELECT client_id, position_title, staff_type, location, bill_rate, pay_rate, currency, start_date, end_date, status, notes FROM job WHERE job_id = :job_id;"""
+    query = """SELECT client_id, position_title, staff_type, location, bill_rate, pay_rate, currency, start_date, end_date, notes FROM job WHERE job_id = :job_id;"""
     cursor = current_app.db.execute(query, {"job_id": job_id})
     job = cursor.fetchone()
     cursor.close()
@@ -64,7 +64,7 @@ def get_job(job_id):
 
 
 def update_job(job_id, update_info):
-    query = """UPDATE job SET client_id = :client_id, position_title = :title, staff_type = :staff_type, location = :location, bill_rate = :bill_rate, pay_rate = :pay_rate, currency = :currency, start_date = :start_date, end_date = :end_date, status = :status, notes = :notes, updated_at = :updated_at WHERE job_id = :job_id;"""
+    query = """UPDATE job SET client_id = :client_id, position_title = :title, staff_type = :staff_type, location = :location, bill_rate = :bill_rate, pay_rate = :pay_rate, currency = :currency, start_date = :start_date, end_date = :end_date, notes = :notes, updated_at = :updated_at WHERE job_id = :job_id;"""
     values = {
         "job_id": job_id,
         "client_id": update_info.client_id,
@@ -76,7 +76,6 @@ def update_job(job_id, update_info):
         "currency": update_info.currency,
         "start_date": update_info.start_date.isoformat(),
         "end_date": update_info.end_date.isoformat(),
-        "status": update_info.status,
         "updated_at": update_info.updated_at.isoformat()
     }
     if len(update_info.notes) == 0:
