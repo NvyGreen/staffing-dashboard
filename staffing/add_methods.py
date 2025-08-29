@@ -124,6 +124,20 @@ def get_employee_dropdown():
 
 
 def place_employee(new_placement):
+    query = """SELECT status FROM employee WHERE employee_id = :employee_id;"""
+    cursor = current_app.db.execute(query, {"employee_id", new_placement.employee_id})
+    employee_status = cursor.fetchone()[0]
+    if employee_status == "Active":
+        cursor.close()
+        return
+
+    query = """SELECT status FROM job WHERE job_id = :job_id;"""
+    cursor = current_app.db.execute(query, {"job_id": new_placement.job_id})
+    job_status = cursor.fetchone()[0]
+    if job_status == "filled":
+        cursor.close()
+        return
+
     query = """SELECT start_date, end_date, bill_rate, pay_rate FROM job WHERE job_id = :job_id;"""
     cursor = current_app.db.execute(query, {"job_id": new_placement.job_id})
     job_placement = cursor.fetchone()
