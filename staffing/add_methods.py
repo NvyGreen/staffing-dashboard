@@ -128,14 +128,14 @@ def place_employee(new_placement):
     query = """SELECT status FROM employee WHERE employee_id = :employee_id;"""
     cursor = current_app.db.execute(query, {"employee_id": new_placement.employee_id})
     employee_status = cursor.fetchone()[0]
-    if employee_status == "Active":
+    if employee_status == "Active" or employee_status == "Inactive":
         cursor.close()
         return
 
     query = """SELECT status FROM job WHERE job_id = :job_id;"""
     cursor = current_app.db.execute(query, {"job_id": new_placement.job_id})
     job_status = cursor.fetchone()[0]
-    if job_status == "filled":
+    if job_status == "filled" or job_status == "closed":
         cursor.close()
         return
 
