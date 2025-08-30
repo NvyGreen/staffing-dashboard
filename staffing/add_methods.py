@@ -1,4 +1,5 @@
 from flask import current_app
+import sqlite3
 
 
 def register_client(new_client):
@@ -124,6 +125,9 @@ def get_employee_dropdown():
 
 
 def place_employee(new_placement):
+    print("Placing Employee")
+
+    print("Getting Employee Status")
     query = """SELECT status FROM employee WHERE employee_id = :employee_id;"""
     cursor = current_app.db.execute(query, {"employee_id", new_placement.employee_id})
     employee_status = cursor.fetchone()[0]
@@ -154,7 +158,15 @@ def place_employee(new_placement):
         "created_at": new_placement.created_at.isoformat(),
         "updated_at": new_placement.updated_at.isoformat()
     }
-    cursor = current_app.db.execute(query, values)
+
+    print("Trying")
+    try:
+        cursor = current_app.db.execute(query, values)
+        print("Yes")
+    except sqlite3.ProgrammingError:
+        cursor.close()
+        print("No")
+        return
 
     query = """UPDATE job SET status = :status WHERE job_id = :job_id;"""
     cursor = current_app.db.execute(query, {"status": "filled", "job_id": new_placement.job_id})
