@@ -19,7 +19,7 @@ def get_employee_info():
 
 
 def get_job_info():
-    query = """SELECT job_id, client_id, position_title, staff_type, location, bill_rate, pay_rate, currency, start_date, end_date, status, notes FROM job WHERE status = :stat1 OR status = :stat2;"""
+    query = """SELECT job_id, client_id, position_title, staff_type, location, bill_rate, pay_rate, currency, start_date, end_date, staff_needed, status, notes FROM job WHERE status = :stat1 OR status = :stat2;"""
     cursor = current_app.db.execute(query, {"stat1": "open", "stat2": "filled"})
     jobs_tup = cursor.fetchall()
     cursor.close()
@@ -55,7 +55,7 @@ def clean_job(raw_job):
     end_date = end_date_raw.strftime("%B %#d, %Y")
     job += [start_date, end_date]
 
-    job += raw_job[10:]    # status, notes
+    job += raw_job[10:]    # staff_needed, status, notes
     
     return job
 

@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, DecimalField, DateField, SubmitField
+from wtforms import StringField, SelectField, DecimalField, DateField, IntegerField, SubmitField
 from wtforms.validators import InputRequired, Email
 
 
@@ -12,7 +12,7 @@ class ClientForm(FlaskForm):
     terms = StringField("Billing Terms", validators=[InputRequired()], default="Net 30")
     industry = StringField("Industry")
 
-    submit = SubmitField("Add Client")
+    submit = SubmitField("Save")
 
 
 class EmployeeForm(FlaskForm):
@@ -27,7 +27,7 @@ class EmployeeForm(FlaskForm):
     bill_rate = DecimalField("Default Bill Rate", default=0.0)
     title = StringField("Role Title")
 
-    submit = SubmitField("Add Employee")
+    submit = SubmitField("Save")
 
 
 class JobForm(FlaskForm):
@@ -45,13 +45,14 @@ class JobForm(FlaskForm):
     currency = StringField("Currency", default="USD")
     start_date = DateField("Start Date")
     end_date = DateField("End Date")
+    staff_needed = IntegerField("# of Positions", default=1)
     notes = StringField("Notes")
 
-    submit = SubmitField("Add Job")
+    submit = SubmitField("Save")
 
 
 class PlacementForm(FlaskForm):
     client_role = SelectField("Client - Position")
     employee = SelectField("Employee")
 
-    submit = SubmitField("Place Employee")
+    submit = SubmitField("Save")

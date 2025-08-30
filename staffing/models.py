@@ -40,6 +40,7 @@ class Job:
     currency: str
     start_date: date
     end_date: date
+    staff_needed: int
     status: str
     notes: str
     created_at: datetime

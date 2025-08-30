@@ -65,22 +65,23 @@ def get_client_dropdown():
 
 
 def add_job(new_job):
-    query = """INSERT INTO job (client_id, position_title, staff_type, location, bill_rate, pay_rate, currency, start_date, end_date, status, notes, created_at, updated_at) VALUES (:client_id, :position_title, :staff_type, :location, :bill_rate, :pay_rate, :currency, :start_date, :end_date, :status, :notes, :created_at, :updated_at);"""
+    query = """INSERT INTO job (client_id, position_title, staff_type, location, bill_rate, pay_rate, currency, start_date, end_date, staff_needed, status, notes, created_at, updated_at) VALUES (:client_id, :position_title, :staff_type, :location, :bill_rate, :pay_rate, :currency, :start_date, :end_date, :staff_needed, :status, :notes, :created_at, :updated_at);"""
     values = {
         "client_id": new_job.client_id,
         "position_title": new_job.title,
         "staff_type": new_job.staff_type,
         "location": new_job.location,
+        "bill_rate": float(new_job.bill_rate),
+        "pay_rate": float(new_job.pay_rate),
         "currency": new_job.currency,
+        "start_date": new_job.start_date.isoformat(),
+        "end_date": new_job.end_date.isoformat(),
+        "staff_needed": new_job.staff_needed,
         "status": new_job.status,
+        "created_at": new_job.created_at.isoformat(),
+        "updated_at": new_job.updated_at.isoformat()
     }
 
-    values["bill_rate"] = float(new_job.bill_rate)
-    values["pay_rate"] = float(new_job.pay_rate)
-    values["start_date"] = new_job.start_date.isoformat()
-    values["end_date"] = new_job.end_date.isoformat()
-    values["created_at"] = new_job.created_at.isoformat()
-    values["updated_at"] = new_job.updated_at.isoformat()
     if len(new_job.notes) == 0:
         values["notes"] = None
     else:

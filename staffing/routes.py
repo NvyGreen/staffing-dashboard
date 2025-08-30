@@ -150,6 +150,7 @@ def add_job():
             currency=form.currency.data,
             start_date=form.start_date.data,
             end_date=form.end_date.data,
+            staff_needed=form.staff_needed.data,
             status="open",
             notes=form.notes.data,
             created_at=datetime.now(),
@@ -298,7 +299,8 @@ def edit_job(_id: int):
         form.currency.data = job[6]
         form.start_date.data = date.fromisoformat(job[7])
         form.end_date.data = date.fromisoformat(job[8])
-        form.notes.data = job[9]
+        form.staff_needed.data = job[9]
+        form.notes.data = job[10]
     
     if form.validate_on_submit():
         updated_job = Job(
@@ -311,6 +313,7 @@ def edit_job(_id: int):
             currency=form.currency.data,
             start_date=form.start_date.data,
             end_date=form.end_date.data,
+            staff_needed=form.staff_needed.data,
             status="open",                # Not used
             notes=form.notes.data,
             created_at=datetime.now(),    # Not used
