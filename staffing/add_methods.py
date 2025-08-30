@@ -51,7 +51,7 @@ def register_employee(new_employee):
 
 
 def get_client_dropdown():
-    cursor = current_app.db.execute("""SELECT client_name FROM client;""")
+    cursor = current_app.db.execute("""SELECT client_name FROM client WHERE status = :status;""", {"status": "Active"})
     clients = cursor.fetchall()
     cursor.close()
 
@@ -93,8 +93,8 @@ def add_job(new_job):
 
 
 def get_job_dropdown():
-    query = """SELECT job_id, client_id, position_title FROM job;"""
-    cursor = current_app.db.execute(query)
+    query = """SELECT job_id, client_id, position_title FROM job WHERE status = :status;"""
+    cursor = current_app.db.execute(query, {"status": "open"})
     raw_options = cursor.fetchall()
     options = []
 
@@ -118,8 +118,8 @@ def clean_job_option(raw_option):
 
 
 def get_employee_dropdown():
-    query = """SELECT employee_id, full_name FROM employee;"""
-    cursor = current_app.db.execute(query)
+    query = """SELECT employee_id, full_name FROM employee WHERE status = :status;"""
+    cursor = current_app.db.execute(query, {"status": "Standby"})
     employee_options = cursor.fetchall()
     cursor.close()
     return employee_options
