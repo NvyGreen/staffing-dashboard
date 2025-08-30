@@ -98,7 +98,30 @@ def get_placement(placement_id):
     return placement
 
 
+def get_current_job_option(job_id):
+    query = """SELECT job_id, client_id, position_title FROM job WHERE job_id = :job_id;"""
+    cursor = current_app.db.execute(query, {"job_id": job_id})
+    job_id, client_id, title = cursor.fetchone()
+
+    query = """SELECT client_name FROM client WHERE client_id = :client_id;"""
+    cursor = current_app.db.execute(query, {"client_id": client_id})
+    client_name = cursor.fetchone()[0]
+    cursor.close()
+
+    option = (job_id, client_name + " - " + title)
+    return option
+
+
+def get_current_employee_option(employee_id):
+    query = """SELECT employee_id, full_name FROM employee WHERE employee_id = :employee_id;"""
+    cursor = current_app.db.execute(query, {"employee_id": employee_id})
+    employee = cursor.fetchone()
+    cursor.close()
+    return employee
+
+
 def update_placement(placement_id, update_info):
+    # Check employee is available
     query = """SELECT status FROM employee WHERE employee_id = :employee_id;"""
     cursor = current_app.db.execute(query, {"employee_id": update_info.employee_id})
     employee_status = cursor.fetchone()[0]
@@ -106,13 +129,20 @@ def update_placement(placement_id, update_info):
         cursor.close()
         return
     
+    # CHeck job is available
     query = """SELECT status FROM job WHERE job_id = :job_id;"""
     cursor = current_app.db.execute(query, {"job_id": update_info.job_id})
     job_status = cursor.fetchone()[0]
     if job_status == "filled" or job_status == "closed":
         cursor.close()
         return
+    
+    # Get data of old job and employee
+    query = """SELECT job_id, employee_id FROM placement WHERE placement_id = :placement_id;"""
+    cursor = current_app.db.execute(query, {"placement_id": placement_id})
+    old_job, old_employee = cursor.fetchone()
 
+    # Update placement record
     query = """UPDATE placement SET job_id = :job_id, employee_id = :employee_id, updated_at = :updated_at WHERE placement_id = :placement_id;"""
     values = {
         "placement_id": placement_id,
@@ -140,6 +170,39 @@ def update_placement(placement_id, update_info):
         "pay_rate": new_job[3]
     }
     cursor = current_app.db.execute(query, values)
+
+    # Update info on old and new jobs
+    if old_job != update_info.job_id:
+        # Update old job
+        query = """UPDATE job SET staff_needed = staff_needed + 1 WHERE job_id = :job_id;"""
+        cursor = current_app.db.execute(query, {"job_id": old_job})
+
+        query = """SELECT staff_needed, status FROM job WHERE job_id = :job_id;"""
+        cursor = current_app.db.execute(query, {"job_id": old_job})
+        pos_left, status = cursor.fetchone()
+        if (pos_left > 0) and (status == "filled"):
+            query = """UPDATE job SET status = :status WHERE job_id = :job_id;"""
+            cursor = current_app.db.execute(query, {"job_id": old_job, "status": "open"})
+        
+        # Update new job
+        query = """UPDATE job SET staff_needed = staff_needed - 1 WHERE job_id = :job_id;"""
+        cursor = current_app.db.execute(query, {"job_id": update_info.job_id})
+
+        query = """SELECT staff_needed, status FROM job WHERE job_id = :job_id;"""
+        cursor = current_app.db.execute(query, {"job_id": update_info.job_id})
+        pos_left, status = cursor.fetchone()
+        if (pos_left == 0) and (status == "open"):
+            query = """UPDATE job SET status = :status WHERE job_id = :job_id;"""
+            cursor = current_app.db.execute(query, {"job_id": update_info.job_id, "status": "filled"})
+    
+    # Update info on old and new employees
+    if old_employee != update_info.employee_id:
+        # Update old employee
+        query = """UPDATE employee SET status = :status WHERE employee_id = :employee_id;"""
+        cursor = current_app.db.execute(query, {"employee_id": old_employee, "status": "Standby"})
+
+        # Update new employee
+        cursor = current_app.db.execute(query, {"employee_id": update_info.employee_id, "status": "Active"})
 
     current_app.db.commit()
     cursor.close()

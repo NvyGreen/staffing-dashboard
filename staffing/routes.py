@@ -344,6 +344,9 @@ def edit_placement(_id: int):
     form.employee.choices = add_methods.get_employee_dropdown()
     placement = edit_methods.get_placement(_id)
 
+    form.client_role.choices.append(edit_methods.get_current_job_option(placement[0]))
+    form.employee.choices.append(edit_methods.get_current_employee_option(placement[1]))
+
     if request.method == "GET":
         form.client_role.data=str(placement[0])
         form.employee.data=str(placement[1])
