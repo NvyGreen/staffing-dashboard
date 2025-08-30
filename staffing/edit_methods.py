@@ -121,26 +121,28 @@ def get_current_employee_option(employee_id):
 
 
 def update_placement(placement_id, update_info):
-    # Check employee is available
-    query = """SELECT status FROM employee WHERE employee_id = :employee_id;"""
-    cursor = current_app.db.execute(query, {"employee_id": update_info.employee_id})
-    employee_status = cursor.fetchone()[0]
-    if employee_status == "Active" or employee_status == "Inactive":
-        cursor.close()
-        return
-    
-    # CHeck job is available
-    query = """SELECT status FROM job WHERE job_id = :job_id;"""
-    cursor = current_app.db.execute(query, {"job_id": update_info.job_id})
-    job_status = cursor.fetchone()[0]
-    if job_status == "filled" or job_status == "closed":
-        cursor.close()
-        return
-    
     # Get data of old job and employee
     query = """SELECT job_id, employee_id FROM placement WHERE placement_id = :placement_id;"""
     cursor = current_app.db.execute(query, {"placement_id": placement_id})
     old_job, old_employee = cursor.fetchone()
+
+    # Check employee is available
+    if old_employee != update_info.employee_id:
+        query = """SELECT status FROM employee WHERE employee_id = :employee_id;"""
+        cursor = current_app.db.execute(query, {"employee_id": update_info.employee_id})
+        employee_status = cursor.fetchone()[0]
+        if employee_status == "Active" or employee_status == "Inactive":
+            cursor.close()
+            return
+    
+    # Check job is available
+    if old_job != update_info.job_id:
+        query = """SELECT status FROM job WHERE job_id = :job_id;"""
+        cursor = current_app.db.execute(query, {"job_id": update_info.job_id})
+        job_status = cursor.fetchone()[0]
+        if job_status == "filled" or job_status == "closed":
+            cursor.close()
+            return
 
     # Update placement record
     query = """UPDATE placement SET job_id = :job_id, employee_id = :employee_id, updated_at = :updated_at WHERE placement_id = :placement_id;"""
@@ -157,6 +159,7 @@ def update_placement(placement_id, update_info):
         cursor.close()
         return
 
+    # Get info on job to finish placement record
     query = """SELECT start_date, end_date, bill_rate, pay_rate FROM job WHERE job_id = :job_id;"""
     cursor = current_app.db.execute(query, {"job_id": update_info.job_id})
     new_job = cursor.fetchone()
