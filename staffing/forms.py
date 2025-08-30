@@ -12,7 +12,7 @@ class ClientForm(FlaskForm):
     terms = StringField("Billing Terms", validators=[InputRequired()], default="Net 30")
     industry = StringField("Industry")
 
-    submit = SubmitField("Save")
+    submit = SubmitField("Save Client")
 
 
 class EmployeeForm(FlaskForm):
@@ -27,7 +27,7 @@ class EmployeeForm(FlaskForm):
     bill_rate = DecimalField("Default Bill Rate", default=0.0)
     title = StringField("Role Title")
 
-    submit = SubmitField("Save")
+    submit = SubmitField("Save Employee")
 
 
 class JobForm(FlaskForm):
@@ -48,11 +48,11 @@ class JobForm(FlaskForm):
     staff_needed = IntegerField("# of Positions", default=1)
     notes = StringField("Notes")
 
-    submit = SubmitField("Save")
+    submit = SubmitField("Save Job")
 
 
 class PlacementForm(FlaskForm):
     client_role = SelectField("Client - Position")
     employee = SelectField("Employee")
 
-    submit = SubmitField("Save")
+    submit = SubmitField("Save Placement")
