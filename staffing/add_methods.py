@@ -163,8 +163,16 @@ def place_employee(new_placement):
         cursor.close()
         return
 
-    query = """UPDATE job SET status = :status WHERE job_id = :job_id;"""
-    cursor = current_app.db.execute(query, {"status": "filled", "job_id": new_placement.job_id})
+    query = """UPDATE job set staff_needed = staff_needed - 1 WHERE job_id = :job_id;"""
+    cursor = current_app.db.execute(query, {"job_id": new_placement.job_id})
+
+    query = """SELECT staff_needed FROM job WHERE job_id = :job_id;"""
+    cursor = current_app.db.execute(query, {"job_id": new_placement.job_id})
+    positions_left = cursor.fetchone()[0]
+
+    if positions_left == 0:
+        query = """UPDATE job SET status = :status WHERE job_id = :job_id;"""
+        cursor = current_app.db.execute(query, {"status": "filled", "job_id": new_placement.job_id})
 
     query = """UPDATE employee SET status = :status WHERE employee_id = :employee_id;"""
     cursor = current_app.db.execute(query, {"status": "Active", "employee_id": new_placement.employee_id})
