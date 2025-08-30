@@ -6,14 +6,10 @@ from flask import (
     request
 )
 from staffing.forms import (
-    AddClient,
-    AddEmployee,
-    AddJob,
-    PlaceEmployee,
-    EditClient,
-    EditEmployee,
-    EditJob,
-    EditPlacement
+    ClientForm,
+    EmployeeForm,
+    JobForm,
+    PlacementForm,
 )
 from staffing.models import (
     Client,
@@ -84,7 +80,7 @@ def placements():
 
 @pages.route("/add-client", methods=["GET", "POST"])
 def add_client():
-    form = AddClient()
+    form = ClientForm()
 
     if form.validate_on_submit():
         new_client = Client(
@@ -112,7 +108,7 @@ def add_client():
 
 @pages.route("/add-employee", methods=["GET", "POST"])
 def add_employee():
-    form = AddEmployee()
+    form = EmployeeForm()
 
     if form.validate_on_submit():
         new_employee = Employee(
@@ -140,7 +136,7 @@ def add_employee():
 
 @pages.route("/add-job", methods=["GET", "POST"])
 def add_job():
-    form = AddJob()
+    form = JobForm()
     form.client.choices = add_methods.get_client_dropdown()
 
     if form.validate_on_submit():
@@ -172,7 +168,7 @@ def add_job():
 
 @pages.route("/add-placement", methods=["GET", "POST"])
 def add_placement():
-    form = PlaceEmployee()
+    form = PlacementForm()
     form.client_role.choices = add_methods.get_job_dropdown()
     form.employee.choices = add_methods.get_employee_dropdown()
 
@@ -197,7 +193,7 @@ def add_placement():
 
 @pages.route("/client/<int:_id>", methods=["GET", "POST"])
 def edit_client(_id: int):
-    form = AddClient()
+    form = ClientForm()
     client = edit_methods.get_client(_id)
 
     if request.method == "GET":
@@ -242,7 +238,7 @@ def delete_client(_id: int):
 
 @pages.route("/employee/<int:_id>", methods=["GET", "POST"])
 def edit_employee(_id: int):
-    form = AddEmployee()
+    form = EmployeeForm()
     employee = edit_methods.get_employee(_id)
 
     if request.method == "GET":
@@ -288,7 +284,7 @@ def delete_employee(_id: int):
 
 @pages.route("/job/<int:_id>", methods=["GET", "POST"])
 def edit_job(_id: int):
-    form = AddJob()
+    form = JobForm()
     form.client.choices = add_methods.get_client_dropdown()
     job = edit_methods.get_job(_id)
 
@@ -340,7 +336,7 @@ def delete_job(_id: int):
 
 @pages.route("/placement/<int:_id>", methods=["GET", "POST"])
 def edit_placement(_id: int):
-    form = PlaceEmployee()
+    form = PlacementForm()
     form.client_role.choices = add_methods.get_job_dropdown()
     form.employee.choices = add_methods.get_employee_dropdown()
     placement = edit_methods.get_placement(_id)
