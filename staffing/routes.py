@@ -384,6 +384,8 @@ def delete_placement(_id: int):
 @pages.route("/invoice")
 def invoices():
     form = InvoiceSelect()
+    form.client.choices += add_methods.get_client_dropdown()
+
     return render_template(
         "invoices.html",
         title="Dashboard | Invoices",

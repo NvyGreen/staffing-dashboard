@@ -51,17 +51,10 @@ def register_employee(new_employee):
 
 
 def get_client_dropdown():
-    cursor = current_app.db.execute("""SELECT client_name FROM client WHERE status = :status;""", {"status": "Active"})
+    cursor = current_app.db.execute("""SELECT client_id, client_name FROM client WHERE status = :status;""", {"status": "Active"})
     clients = cursor.fetchall()
-    cursor.close()
-
-    client_dropdown = []
-    i = 1
-    for client in clients:
-        client_dropdown.append((str(i), client[0]))
-        i += 1
-    
-    return client_dropdown
+    cursor.close()    
+    return clients
 
 
 def add_job(new_job):

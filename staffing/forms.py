@@ -59,6 +59,8 @@ class PlacementForm(FlaskForm):
 
 
 class InvoiceSelect(FlaskForm):
-    client = SelectField("Client")
+    client = SelectField("Client", choices=[
+        (0, " ")
+    ])
     
     submit = SubmitField("See Invoice")
