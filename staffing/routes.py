@@ -10,6 +10,7 @@ from staffing.forms import (
     EmployeeForm,
     JobForm,
     PlacementForm,
+    InvoiceSelect
 )
 from staffing.models import (
     Client,
@@ -378,3 +379,13 @@ def edit_placement(_id: int):
 def delete_placement(_id: int):
     delete_methods.delete_placement(_id)
     return redirect(url_for(".placements"))
+
+
+@pages.route("/invoice")
+def invoices():
+    form = InvoiceSelect()
+    return render_template(
+        "invoices.html",
+        title="Dashboard | Invoices",
+        form=form
+    )

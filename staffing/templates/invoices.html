@@ -1,0 +1,16 @@
+{% from "macros/fields.html" import render_text_field %}
+
+{% extends "layout.html" %}
+
+{% block main_content %}
+<form name="get-invoice" method="post" class="invoice">
+    <h1 class="invoice_title">Invoices</h1>
+    {{ form.hidden_tag() }}
+
+    {{ render_text_field(form.client) }}
+
+    <div>
+        {{ form.submit(class_="button button--form") }}
+    </div>
+</form>
+{% endblock %}

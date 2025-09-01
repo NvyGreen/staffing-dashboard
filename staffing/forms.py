@@ -56,3 +56,9 @@ class PlacementForm(FlaskForm):
     employee = SelectField("Employee")
 
     submit = SubmitField("Save Placement")
+
+
+class InvoiceSelect(FlaskForm):
+    client = SelectField("Client")
+    
+    submit = SubmitField("See Invoice")
