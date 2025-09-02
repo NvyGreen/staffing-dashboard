@@ -1,22 +1,30 @@
 from flask import current_app
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 
 def generate_invoice(client_id):
+    # Get client jobs
     query = """SELECT job_id FROM job WHERE client_id = :client_id;"""
     cursor = current_app.db.execute(query, {"client_id": client_id})
     jobs = cursor.fetchall()
+    if len(jobs) == 0:
+        return
 
+    # Get client placements
     query = """SELECT placement_id FROM placement WHERE job_id = :job_id;"""
     placements = []
     for job in jobs:
         cursor = current_app.db.execute(query, {"job_id", job[0]})
         placements += cursor.fetchall()
+    if len(placements) == 0:
+        return
     
+    # See if client has invoice
     query = """SELECT invoice_id FROM invoice WHERE client_id = :client_id;"""
     cursor = current_app.db.execute(query, {"client_id": client_id})
     invoice = cursor.fetchone()
 
+    # Generate invoice if there isn't one
     if invoice is None:
         today = date.today()
         query = """SELECT invoice_no FROM invoice ORDER BY invoice_id DESC LIMIT 1;"""
@@ -46,5 +54,19 @@ def generate_invoice(client_id):
                 invoice_no = "INV-" + today.strftime("%y%m%d") + "-001"
         else:
             invoice_no = "INV-" + today.strftime("%y%m%d") + "-001"
+        
+        # Generate due date
+        due_date = today + timedelta(days=15)
 
+        # Insert invoice
         query = """INSERT INTO invoice (client_id, invoice_no, issue_date, due_date, created_at, updated_at) VALUES (:client_id, :invoice_no, :issue_date, :due_date, :created_at, :updated_at);"""
+        values = {
+            "client_id": client_id,
+            "invoice_no": invoice_no,
+            "issue_date": today,
+            "due_date": due_date,
+            "created_at": datetime.now(),
+            "updated_at": datetime.now()
+        }
+        cursor = current_app.db.execute(query, values)
+        current_app.db.commit()
