@@ -19,6 +19,15 @@ def generate_invoice(client_id):
     if len(placements) == 0:
         return
     
+    # Get client timesheets
+    query = """SELECT timesheet_id FROM timesheet WHERE placement_id = :placement_id;"""
+    timesheets = []
+    for placement in placements:
+        cursor = current_app.db.execute(query, {"timesheet_id", placement[0]})
+        timesheets += cursor.fetchall()
+    if len(timesheets) == 0:
+        return
+    
     # See if client has invoice
     query = """SELECT invoice_id FROM invoice WHERE client_id = :client_id;"""
     cursor = current_app.db.execute(query, {"client_id": client_id})
@@ -70,3 +79,10 @@ def generate_invoice(client_id):
         }
         cursor = current_app.db.execute(query, values)
         current_app.db.commit()
+
+        # Get the invoice id after creation
+        query = """SELECT invoice_id FROM invoice WHERE client_id = :client_id;"""
+        cursor = current_app.db.execute(query, {"client_id": client_id})
+        invoice = cursor.fetchone()
+    
+    pass
