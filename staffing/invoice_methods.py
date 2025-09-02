@@ -1,5 +1,50 @@
 from flask import current_app
+from datetime import date, datetime
 
 
 def generate_invoice(client_id):
-    pass
+    query = """SELECT job_id FROM job WHERE client_id = :client_id;"""
+    cursor = current_app.db.execute(query, {"client_id": client_id})
+    jobs = cursor.fetchall()
+
+    query = """SELECT placement_id FROM placement WHERE job_id = :job_id;"""
+    placements = []
+    for job in jobs:
+        cursor = current_app.db.execute(query, {"job_id", job[0]})
+        placements += cursor.fetchall()
+    
+    query = """SELECT invoice_id FROM invoice WHERE client_id = :client_id;"""
+    cursor = current_app.db.execute(query, {"client_id": client_id})
+    invoice = cursor.fetchone()
+
+    if invoice is None:
+        today = date.today()
+        query = """SELECT invoice_no FROM invoice ORDER BY invoice_id DESC LIMIT 1;"""
+        cursor = current_app.db.execute(query)
+        last_invoice = cursor.fetchone()
+        invoice_no = ""
+
+        # Generate invoice number
+        if last_invoice is not None:
+            last_invoice = last_invoice[0]
+            invoice_date = last_invoice[4:10]
+            invoice_date = datetime.strptime(invoice_date, "%y%m%d")
+
+            if invoice_date == today.strftime("%y%m%d"):    # if invoice is being created on same day as last invoice
+                last_no = int(last_invoice[11:])
+                new_no = last_no + 1
+
+                if len(str(new_no)) == 1:
+                    new_no = "00" + str(new_no)
+                elif len(str(new_no)) == 2:
+                    new_no = "0" + str(new_no)
+                else:
+                    new_no = str(new_no)
+                
+                invoice_no = "INV-" + today.strftime("%y%m%d") + "-" + new_no
+            else:
+                invoice_no = "INV-" + today.strftime("%y%m%d") + "-001"
+        else:
+            invoice_no = "INV-" + today.strftime("%y%m%d") + "-001"
+
+        query = """INSERT INTO invoice (client_id, invoice_no, issue_date, due_date, created_at, updated_at) VALUES (:client_id, :invoice_no, :issue_date, :due_date, :created_at, :updated_at);"""
