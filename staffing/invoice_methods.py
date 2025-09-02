@@ -65,7 +65,7 @@ def generate_invoice_items(client_id):
     
     # Create invoice items for each timesheet
     for timesheet in timesheets:
-        create_invoice_item(timesheet)
+        create_invoice_item(invoice, timesheet)
 
 
 def create_new_invoice(client_id):
@@ -116,5 +116,50 @@ def create_new_invoice(client_id):
     current_app.db.commit()
 
 
-def create_invoice_item(timesheet_id):
-    pass
+def create_invoice_item(invoice_id, timesheet_id):
+    # Get total hours worked
+    query = """SELECT hours, overtime_hours FROM timesheet_entry WHERE timesheet_id = :timesheet_id;"""
+    cursor = current_app.db.execute(query, {"timesheet_id": timesheet_id})
+    entries = cursor.fetchall()
+
+    hours = 0
+    ot_hours = 0
+    for entry in entries:
+        hours += entry[0]
+        ot_hours += entry[1]
+    
+    # Get bill rate
+    query = """SELECT placement_id FROM timesheet WHERE timesheet_id = :timesheet_id;"""
+    cursor = current_app.db.execute(query, {"timesheet_id": timesheet_id})
+    placement = cursor.fetchone()[0]
+
+    query = """SELECT job_id, employee_id FROM placement WHERE placement_id = :placement_id;"""
+    cursor = current_app.db.execute(query, {"placement_id": placement})
+    job, employee = cursor.fetchone()
+
+    query = """SELECT position_title, bill_rate FROM job WHERE job_id = :job_id;"""
+    cursor = current_app.db.execute(query, {"job_id": job})
+    title, job_bill_rate = cursor.fetchone()
+
+    query = """SELECT full_name, default_bill_rate FROM employee WHERE employee_id = :employee_id;"""
+    cursor = current_app.db.execute(query, {"employee_id": employee})
+    employee_name, employee_bill_rate = cursor.fetchone()
+
+    bill_rate = max(job_bill_rate, employee_bill_rate)
+
+    # Generate description
+    description = employee_name + " - " + title
+
+    # Create entry
+    query = """INSERT INTO invoice_item (invoice_id, description, hours, ot_hours, bill_rate, timesheet_id, created_at) VALUES (:invoice_id, :description, :hours, :ot_hours, :bill_rate, :timesheet_id, :created_at);"""
+    values = {
+        "invoice_id": invoice_id,
+        "description": description,
+        "hours": hours,
+        "ot_hours": ot_hours,
+        "bill_rate": bill_rate,
+        "timesheet_id": timesheet_id,
+        "created_at": datetime.now()
+    }
+    cursor = current_app.db.execute(query, values)
+    current_app.db.commit()
