@@ -1,14 +1,14 @@
-.invoice {
+.invoice__form {
     display: flex;
     align-items: center;
 }
 
-.invoice__group {
+.invoice__form--group {
     padding-left: 2rem;
     padding-right: 2rem;
 }
 
-.invoice__field {
+.invoice__form--field {
     outline: none;
     border: none;
     font-size: inherit;
@@ -17,7 +17,7 @@
     background: #e2e8f0;
 }
 
-.invoice__button {
+.invoice__form--button {
     padding: 0.4rem 1rem;
     border: none;
     color: white;
