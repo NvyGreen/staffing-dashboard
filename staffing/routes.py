@@ -384,13 +384,26 @@ def delete_placement(_id: int):
 
 @pages.route("/invoice")
 def invoices():
-    invoice_methods.generate_invoice_items(2)
+    form = InvoiceSelect()
+    form.client.choices += add_methods.get_client_dropdown()
 
+    if form.validate_on_submit():
+        return redirect(url_for(".client_invoice", _id=int(form.client.data)))
+
+    return render_template(
+        "invoices.html",
+        title="Dashboard | Invoices",
+        form=form
+    )
+
+
+@pages.route("/invoice/<int:_id>")
+def client_invoice():
     form = InvoiceSelect()
     form.client.choices += add_methods.get_client_dropdown()
 
     return render_template(
-        "invoices.html",
+        "client-invoice.html",
         title="Dashboard | Invoices",
         form=form
     )
