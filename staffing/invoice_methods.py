@@ -66,6 +66,10 @@ def generate_invoice_items(client_id):
     # Create invoice items for each timesheet
     for timesheet in timesheets:
         create_invoice_item(invoice, timesheet)
+    
+    # Fill subtotal, total, and balance entries
+    fill_total(invoice)
+    cursor.close()
 
 
 def create_new_invoice(client_id):
@@ -103,17 +107,19 @@ def create_new_invoice(client_id):
     due_date = today + timedelta(days=15)
 
     # Insert invoice
-    query = """INSERT INTO invoice (client_id, invoice_no, issue_date, due_date, created_at, updated_at) VALUES (:client_id, :invoice_no, :issue_date, :due_date, :created_at, :updated_at);"""
+    query = """INSERT INTO invoice (client_id, invoice_no, issue_date, due_date, tax_amount, created_at, updated_at) VALUES (:client_id, :invoice_no, :issue_date, :due_date, :tax_amount, :created_at, :updated_at);"""
     values = {
         "client_id": client_id,
         "invoice_no": invoice_no,
         "issue_date": today,
         "due_date": due_date,
+        "tax_amount": 0.075,
         "created_at": datetime.now(),
         "updated_at": datetime.now()
     }
     cursor = current_app.db.execute(query, values)
     current_app.db.commit()
+    cursor.close()
 
 
 def create_invoice_item(invoice_id, timesheet_id):
@@ -163,3 +169,31 @@ def create_invoice_item(invoice_id, timesheet_id):
     }
     cursor = current_app.db.execute(query, values)
     current_app.db.commit()
+    cursor.close()
+
+
+def fill_total(invoice_id):
+    query = """SELECT amount FROM invoice_item WHERE invoice_id = :invoice_id;"""
+    cursor = current_app.db.execute(query, {"invoice_id": invoice_id})
+    amounts = cursor.fetchall()
+    subtotal = 0
+
+    for amount in amounts:
+        subtotal += amount[0]
+    
+    query = """SELECT tax_amount FROM invoice WHERE invoice_id = :invoice_id;"""
+    cursor = current_app.db.execute(query, {"invoice_id": invoice_id})
+    tax = cursor.fetchone()[0]
+
+    total = subtotal * (1 + tax)
+
+    query = """UPDATE invoice SET subtotal = :subtotal, total = :total, balance = :balance;"""
+    values = {
+        "subtotal": subtotal,
+        "total": total,
+        "balance": total
+    }
+
+    cursor = current_app.db.execute(query, values)
+    current_app.db.commit()
+    cursor.close()
