@@ -22,6 +22,7 @@ import staffing.retrieve_methods as retrieve_methods
 import staffing.add_methods as add_methods
 import staffing.edit_methods as edit_methods
 import staffing.delete_methods as delete_methods
+import staffing.invoice_methods as invoice_methods
 from datetime import datetime, date
 
 
@@ -383,6 +384,8 @@ def delete_placement(_id: int):
 
 @pages.route("/invoice")
 def invoices():
+    invoice_methods.generate_invoice_items(2)
+
     form = InvoiceSelect()
     form.client.choices += add_methods.get_client_dropdown()
 

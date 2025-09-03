@@ -14,7 +14,7 @@ def generate_invoice_items(client_id):
     query = """SELECT placement_id FROM placement WHERE job_id = :job_id;"""
     placements = []
     for job in jobs:
-        cursor = current_app.db.execute(query, {"job_id", job[0]})
+        cursor = current_app.db.execute(query, {"job_id": job[0]})
         placements += cursor.fetchall()
     if len(placements) == 0:
         return
@@ -23,7 +23,7 @@ def generate_invoice_items(client_id):
     query = """SELECT timesheet_id FROM timesheet WHERE placement_id = :placement_id AND status = :status;"""
     timesheets = []
     for placement in placements:
-        cursor = current_app.db.execute(query, {"timesheet_id": placement[0], "status": "approved"})
+        cursor = current_app.db.execute(query, {"placement_id": placement[0], "status": "approved"})
         timesheets += cursor.fetchall()
     if len(timesheets) == 0:
         return
