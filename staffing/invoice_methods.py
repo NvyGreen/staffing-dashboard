@@ -208,14 +208,14 @@ def get_client_invoice(client_id):
 
     query = """SELECT hours, ot_hours, bill_rate, amount, timesheet_id FROM invoice_item WHERE invoice_id = :invoice_id;"""
     cursor = current_app.db.execute(query, {"invoice_id": invoice[0]})
-    invoice_items = cursor.fetchall()
-    if len(invoice_items) == 0:
+    invoice_data = cursor.fetchall()
+    if len(invoice_data) == 0:
         return []
     
-    invoice_data = []
-    for item in invoice_items:
+    invoice_items = []
+    for item in invoice_data:
         query = """SELECT placement_id, start_date, end_date FROM timesheet WHERE timesheet_id = :timesheet_id;"""
-        cursor = current_app.db.execute(query, {"timesheet_id", item[4]})
+        cursor = current_app.db.execute(query, {"timesheet_id": item[4]})
         timesheet = cursor.fetchone()
 
         query = """SELECT job_id, employee_id FROM placement WHERE placement_id = :placement_id;"""
@@ -238,12 +238,12 @@ def get_client_invoice(client_id):
         total = item[3]
 
         line_item = [employee, title, start_date, end_date, reg_hours, reg_rate, reg_amt, ot_hours, ot_rate, ot_amt, total]
-        invoice_data.append(line_item)
+        invoice_items.append(line_item)
     
     invoice_no, issue_date, due_date = invoice[1:4]
 
-    query = """SELECT contact_name, contact_email, contact_phone, billing_address, terms FROM client WHERE client_id = :client_id;"""
-    cursor = current_app.db.execute(query, {"client_id", client_id})
+    query = """SELECT contact_name, contact_email, contact_phone, billing_address, billing_terms FROM client WHERE client_id = :client_id;"""
+    cursor = current_app.db.execute(query, {"client_id": client_id})
     contact_name, email, phone, address, terms = cursor.fetchone()
 
-    return [contact_name, email, phone, address, invoice_no, issue_date, terms, due_date, invoice_data]
+    return [invoice_no, contact_name, email, phone, address, issue_date, due_date, terms, invoice_items]

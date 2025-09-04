@@ -19,15 +19,15 @@
 </form>
 
 <div class="invoice">
-    <p>Contact Person</p>
-    <p>Phone</p>
-    <p>Email</p>
-    <p>Billing Address</p>
+    <p>{{ invoice.contact_name }}</p>
+    <p>{{ invoice.contact_phone }}</p>
+    <p>{{ invoice.contact_email }}</p>
+    <p>{{ invoice.billing_address }}</p>
 
-    <p>Invoice #</p>
-    <p>Issue Date</p>
-    <p>Terms</p>
-    <p>Due Date</p>
+    <p>{{ invoice.invoice_no }}</p>
+    <p>{{ invoice.issue_date }}</p>
+    <p>{{ invoice.terms }}</p>
+    <p>{{ invoice.due_date }}</p>
 
     <table class="invoice__table">
         <thead>
@@ -47,7 +47,13 @@
         </thead>
 
         <tbody>
-            <tr></tr>
+            {% for invoice_item in invoice.invoice_items %}
+                <tr>
+                    {% for cell in invoice_item %}
+                        <td class="invoice__item">{{ cell }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 </div>

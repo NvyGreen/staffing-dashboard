@@ -63,7 +63,7 @@ class Invoice:
     contact_email: str
     contact_phone: str
     billing_address: str
-    issue_date: date
-    due_date: date
+    issue_date: str
+    due_date: str
     terms: str
-    invoice_data: list
+    invoice_items: list
