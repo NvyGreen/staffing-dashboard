@@ -19,15 +19,21 @@
 </form>
 
 <div class="invoice">
-    <p>{{ invoice.contact_name }}</p>
-    <p>{{ invoice.contact_phone }}</p>
-    <p>{{ invoice.contact_email }}</p>
-    <p>{{ invoice.billing_address }}</p>
+    <div class="invoice__header">
+        <div class="invoice__header--left">
+            <p class="invoice__header--text">{{ invoice.contact_name }}</p>
+            <p class="invoice__header--text">{{ invoice.contact_phone }}</p>
+            <p class="invoice__header--text">{{ invoice.contact_email }}</p>
+            <p class="invoice__header--text">{{ invoice.billing_address }}</p>
+        </div>
 
-    <p>{{ invoice.invoice_no }}</p>
-    <p>{{ invoice.issue_date }}</p>
-    <p>{{ invoice.terms }}</p>
-    <p>{{ invoice.due_date }}</p>
+        <div class="invoice__header--right">
+            <p class="invoice__header--text">{{ invoice.invoice_no }}</p>
+            <p class="invoice__header--text">{{ invoice.issue_date }}</p>
+            <p class="invoice__header--text">{{ invoice.terms }}</p>
+            <p class="invoice__header--text">{{ invoice.due_date }}</p>
+        </div>
+    </div>
 
     <table class="invoice__table">
         <thead>
