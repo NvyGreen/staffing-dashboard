@@ -54,3 +54,16 @@ class Placement:
     status: str
     created_at: datetime
     updated_at: datetime
+
+
+@dataclass
+class Invoice:
+    invoice_no: str
+    contact_name: str
+    contact_email: str
+    contact_phone: str
+    billing_address: str
+    issue_date: date
+    due_date: date
+    terms: str
+    invoice_data: list

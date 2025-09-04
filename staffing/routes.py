@@ -16,7 +16,8 @@ from staffing.models import (
     Client,
     Employee,
     Job,
-    Placement
+    Placement,
+    Invoice
 )
 import staffing.retrieve_methods as retrieve_methods
 import staffing.add_methods as add_methods
