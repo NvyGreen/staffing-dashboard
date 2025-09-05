@@ -84,7 +84,6 @@ def create_new_invoice(client_id):
     if last_invoice is not None:
         last_invoice = last_invoice[0]
         invoice_date = last_invoice[4:10]
-        invoice_date = datetime.strptime(invoice_date, "%y%m%d")
 
         if invoice_date == today.strftime("%y%m%d"):    # if invoice is being created on same day as last invoice
             last_no = int(last_invoice[11:])

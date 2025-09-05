@@ -32,7 +32,6 @@
 }
 
 .invoice__header {
-    display: flex;
     align-items: center;
     margin-bottom: 4rem;
 }
