@@ -32,12 +32,11 @@
 }
 
 .invoice__header {
-    align-items: center;
-    margin-bottom: 4rem;
+    margin-bottom: 3rem;
 }
 
-.invoice__header--left {
-    margin-right: 5rem;
+.invoice__header--right {
+    margin-left: 5rem;
 }
 
 .invoice__header--text {
