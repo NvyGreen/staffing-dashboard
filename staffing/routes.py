@@ -416,6 +416,9 @@ def client_invoice(_id: int):
         invoice_items=invoice_list[8]
     )
 
+    if form.validate_on_submit():
+        return redirect(url_for(".client_invoice", _id=int(form.client.data)))
+
     return render_template(
         "client-invoice.html",
         title="Dashboard | Invoices",
