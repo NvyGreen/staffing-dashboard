@@ -38,17 +38,17 @@
     <table class="invoice__table">
         <thead>
             <tr>
-                <th class="invoice__header">Employee</th>
-                <th class="invoice__header">Role</th>
-                <th class="invoice__header">Period Start</th>
-                <th class="invoice__header">Period End</th>
-                <th class="invoice__header">Reg Hours</th>
-                <th class="invoice__header">Reg Rate</th>
-                <th class="invoice__header">Reg Amt</th>
-                <th class="invoice__header">OT Hours</th>
-                <th class="invoice__header">OT Rate</th>
-                <th class="invoice__header">OT Amt</th>
-                <th class="invoice__header">Line Total</th>
+                <th class="invoice__table--header">Employee</th>
+                <th class="invoice__table--header">Role</th>
+                <th class="invoice__table--header">Period Start</th>
+                <th class="invoice__table--header">Period End</th>
+                <th class="invoice__table--header">Reg Hours</th>
+                <th class="invoice__table--header">Reg Rate</th>
+                <th class="invoice__table--header">Reg Amt</th>
+                <th class="invoice__table--header">OT Hours</th>
+                <th class="invoice__table--header">OT Rate</th>
+                <th class="invoice__table--header">OT Amt</th>
+                <th class="invoice__table--header">Line Total</th>
             </tr>
         </thead>
 
@@ -56,7 +56,7 @@
             {% for invoice_item in invoice.invoice_items %}
                 <tr>
                     {% for cell in invoice_item %}
-                        <td class="invoice__item">{{ cell }}</td>
+                        <td class="invoice__table--item">{{ cell }}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}

@@ -42,3 +42,19 @@
 .invoice__header--text {
     font-size: 0.75rem;
 }
+
+.invoice__table,
+.invoice__table--header,
+.invoice__table--item {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.invoice__table--header,
+.invoice__table--item {
+    padding: 5px;
+}
+
+.invoice__table--header {
+    text-align: center;
+}
