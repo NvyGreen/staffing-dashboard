@@ -8,6 +8,7 @@ def generate_invoice_items(client_id):
     cursor = current_app.db.execute(query, {"client_id": client_id})
     jobs = cursor.fetchall()
     if len(jobs) == 0:
+        generate_empty_invoice(client_id)
         return
 
     # Get client placements
@@ -17,6 +18,7 @@ def generate_invoice_items(client_id):
         cursor = current_app.db.execute(query, {"job_id": job[0]})
         placements += cursor.fetchall()
     if len(placements) == 0:
+        generate_empty_invoice(client_id)
         return
     
     # Get client timesheets
@@ -26,6 +28,7 @@ def generate_invoice_items(client_id):
         cursor = current_app.db.execute(query, {"placement_id": placement[0], "status": "approved"})
         timesheets += cursor.fetchall()
     if len(timesheets) == 0:
+        generate_empty_invoice(client_id)
         return
     
     # See if client has invoice
@@ -70,6 +73,28 @@ def generate_invoice_items(client_id):
     # Fill subtotal, total, and balance entries
     fill_total(invoice)
     cursor.close()
+
+
+def generate_empty_invoice(client_id):
+    query = """SELECT invoice_id FROM invoice WHERE client_id = :client_id;"""
+    cursor = current_app.db.execute(query, {"client_id": client_id})
+    invoice = cursor.fetchone()
+
+    if invoice is None:
+        create_new_invoice(client_id)
+        
+        cursor = current_app.db.execute(query, {"client_id": client_id})
+        invoice = cursor.fetchone()[0]
+
+        query = """UPDATE invoice SET subtotal = :subtotal, total = :total, balance = :balance WHERE invoice_id = :invoice_id;"""
+        values = {
+            "subtotal": 0.0,
+            "total": 0.0,
+            "balance": 0.0,
+            "invoice_id": invoice
+        }
+        cursor = current_app.db.execute(query, values)
+        current_app.db.commit()
 
 
 def create_new_invoice(client_id):
@@ -205,11 +230,18 @@ def get_client_invoice(client_id):
     cursor = current_app.db.execute(query, {"client_id": client_id})
     invoice = cursor.fetchone()
 
+    invoice_no, issue_date, due_date = invoice[1:4]
+    query = """SELECT contact_name, contact_email, contact_phone, billing_address, billing_terms FROM client WHERE client_id = :client_id;"""
+    cursor = current_app.db.execute(query, {"client_id": client_id})
+    contact_name, email, phone, address, terms = cursor.fetchone()
+    final_invoice = [invoice_no, contact_name, email, phone, address, issue_date, due_date, terms]
+
     query = """SELECT hours, ot_hours, bill_rate, amount, timesheet_id FROM invoice_item WHERE invoice_id = :invoice_id;"""
     cursor = current_app.db.execute(query, {"invoice_id": invoice[0]})
     invoice_data = cursor.fetchall()
     if len(invoice_data) == 0:
-        return []
+        final_invoice.append([])
+        return final_invoice
     
     invoice_items = []
     for item in invoice_data:
@@ -238,11 +270,6 @@ def get_client_invoice(client_id):
 
         line_item = [employee, title, start_date, end_date, reg_hours, reg_rate, reg_amt, ot_hours, ot_rate, ot_amt, total]
         invoice_items.append(line_item)
-    
-    invoice_no, issue_date, due_date = invoice[1:4]
 
-    query = """SELECT contact_name, contact_email, contact_phone, billing_address, billing_terms FROM client WHERE client_id = :client_id;"""
-    cursor = current_app.db.execute(query, {"client_id": client_id})
-    contact_name, email, phone, address, terms = cursor.fetchone()
-
-    return [invoice_no, contact_name, email, phone, address, issue_date, due_date, terms, invoice_items]
+    final_invoice.append(invoice_items)
+    return final_invoice
