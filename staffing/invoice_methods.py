@@ -211,11 +211,12 @@ def fill_total(invoice_id):
 
     total = subtotal * (1 + tax)
 
-    query = """UPDATE invoice SET subtotal = :subtotal, total = :total, balance = :balance;"""
+    query = """UPDATE invoice SET subtotal = :subtotal, total = :total, balance = :balance WHERE invoice_id = :invoice_id;"""
     values = {
         "subtotal": subtotal,
         "total": total,
-        "balance": total
+        "balance": total,
+        "invoice_id": invoice_id
     }
 
     cursor = current_app.db.execute(query, values)
