@@ -413,7 +413,13 @@ def client_invoice(_id: int):
         issue_date=invoice_list[5],
         due_date=invoice_list[6],
         terms=invoice_list[7],
-        invoice_items=invoice_list[8]
+        status=invoice_list[8],
+        currency=invoice_list[9],
+        subtotal=invoice_list[10],
+        tax_amount=invoice_list[11],
+        total=invoice_list[12],
+        balance=invoice_list[13],
+        invoice_items=invoice_list[14]
     )
 
     if form.validate_on_submit():

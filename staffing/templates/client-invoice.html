@@ -62,5 +62,14 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <div class="invoice__footer">
+        <p class="invoice__footer--text">Status: {{ invoice.status }}</p>
+        <p class="invoice__footer--text">Subtotal: {{ invoice.subtotal }} {{ invoice.currency }}</p>
+        <p class="invoice__footer--text">Tax Amount: {{ invoice.tax_amount }}%</p>
+        <p class="invoice__footer--text">Total: {{ invoice.total }} {{ invoice.currency }}</p>
+        <p class="invoice__footer--text">Paid: 0.00 {{ invoice.currency }}</p>
+        <p class="invoice__footer--text">Balance: {{ invoice.balance }} {{ invoice.currency }}</p>
+    </div>
 </div>
 {% endblock %}

@@ -66,4 +66,10 @@ class Invoice:
     issue_date: str
     due_date: str
     terms: str
+    status: str
+    currency: str
+    subtotal: float
+    tax_amount: float
+    total: float
+    balance: float
     invoice_items: list
