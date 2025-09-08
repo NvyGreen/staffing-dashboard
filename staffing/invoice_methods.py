@@ -263,11 +263,11 @@ def get_client_invoice(client_id):
         employee = cursor.fetchone()[0]
 
         start_date, end_date = timesheet[1:3]
-        reg_hours, reg_rate = item[0], item[2]
-        reg_amt = reg_hours * reg_rate
-        ot_hours, ot_rate = item[1], item[2] * 1.5
-        ot_amt = ot_hours * ot_rate
-        total = item[3]
+        reg_hours, reg_rate = round(item[0], 2), round(item[2], 2)
+        reg_amt = round(item[0] * item[2], 2)
+        ot_hours, ot_rate = round(item[1], 2), round(item[2] * 1.5, 2)
+        ot_amt = round(item[1] * item[2] * 1.5, 2)
+        total = round(item[3], 2)
 
         line_item = [employee, title, start_date, end_date, reg_hours, reg_rate, reg_amt, ot_hours, ot_rate, ot_amt, total]
         invoice_items.append(line_item)
