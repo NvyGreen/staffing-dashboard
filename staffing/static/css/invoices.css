@@ -28,7 +28,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 1.5rem;
+    width: 80%;
+    margin: 3rem auto;
 }
 
 .invoice__header {
@@ -39,8 +40,13 @@
     margin-left: 5rem;
 }
 
-.invoice__header--text {
+.invoice__header--text,
+.invoice__footer--text {
     font-size: 0.75rem;
+}
+
+.invoice__table {
+    width: 100%;
 }
 
 .invoice__table,
@@ -57,4 +63,9 @@
 
 .invoice__table--header {
     text-align: center;
+}
+
+.invoice__footer {
+    margin-top: 3rem;
+    align-self: flex-end;
 }
