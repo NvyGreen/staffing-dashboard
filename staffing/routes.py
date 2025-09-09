@@ -418,8 +418,9 @@ def client_invoice(_id: int):
         subtotal=invoice_list[10],
         tax_amount=invoice_list[11],
         total=invoice_list[12],
-        balance=invoice_list[13],
-        invoice_items=invoice_list[14]
+        amt_paid=invoice_list[13],
+        balance=invoice_list[14],
+        invoice_items=invoice_list[15]
     )
 
     if form.validate_on_submit():

@@ -71,5 +71,6 @@ class Invoice:
     subtotal: float
     tax_amount: float
     total: float
+    amt_paid: float
     balance: float
     invoice_items: list
