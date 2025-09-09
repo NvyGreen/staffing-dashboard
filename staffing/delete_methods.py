@@ -47,12 +47,15 @@ def delete_job(job_id):
 
 
 def delete_placement(placement_id):
-    query = """SELECT job_id FROM placement WHERE placement_id = :placement_id;"""
+    query = """SELECT job_id, employee_id FROM placement WHERE placement_id = :placement_id;"""
     cursor = current_app.db.execute(query, {"placement_id": placement_id})
-    job_id = cursor.fetchone()[0]
+    job_id, employee_id = cursor.fetchone()
 
-    query = """UPDATE job SET status = :status WHERE job_id = :job_id;"""
+    query = """UPDATE job SET staff_needed = staff_needed + 1, status = :status WHERE job_id = :job_id;"""
     cursor = current_app.db.execute(query, {"job_id": job_id, "status": "open"})
+
+    query = """UPDATE employee SET status = :status WHERE employee_id = :employee_id;"""
+    cursor = current_app.db.execute(query, {"employee_id": employee_id, "status": "Standby"})
     
     query = """UPDATE placement SET status = :status WHERE placement_id = :placement_id;"""
     cursor = current_app.db.execute(query, {"placement_id": placement_id, "status": "Ended"})
