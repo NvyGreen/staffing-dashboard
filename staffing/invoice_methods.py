@@ -73,12 +73,6 @@ def generate_invoice_items(client_id):
     # Fill subtotal, total, and balance entries
     fill_total(invoice)
 
-    # Reduce balance amoun based on payments
-    payments = get_invoice_payments(invoice)
-    query = """UPDATE invoice SET balance = balance - :payments WHERE invoice_id = :invoice_id;"""
-    cursor = current_app.db.execute(query, {"payments": payments, "invoice_id": invoice})
-    current_app.db.commit()
-
     cursor.close()
 
 
@@ -218,11 +212,15 @@ def fill_total(invoice_id):
 
     total = subtotal * (1 + tax)
 
+    # Reduce balance amounts based on payments
+    payments = get_invoice_payments(invoice_id)
+    balance = total - payments
+
     query = """UPDATE invoice SET subtotal = :subtotal, total = :total, balance = :balance WHERE invoice_id = :invoice_id;"""
     values = {
         "subtotal": subtotal,
         "total": total,
-        "balance": total,
+        "balance": balance,
         "invoice_id": invoice_id
     }
 
@@ -232,7 +230,7 @@ def fill_total(invoice_id):
 
 
 def get_invoice_payments(invoice_id):
-    query = """SELECT amount FROM payment WHERE invoice_id = :invoice_id;"""
+    query = """SELECT payment_id, amount FROM payment WHERE invoice_id = :invoice_id;"""
     cursor = current_app.db.execute(query, {"invoice_id": invoice_id})
     amounts = cursor.fetchall()
 
@@ -241,9 +239,12 @@ def get_invoice_payments(invoice_id):
         return 0
 
     amt_paid = 0
+    query = """UPDATE payment SET status = :status WHERE payment_id = :payment_id;"""
     for amount in amounts:
-        amt_paid += amount[0]
+        cursor = current_app.db.execute(query, {"payment_id": amount[0], "status": "processed"})
+        amt_paid += amount[1]
     
+    current_app.db.commit()
     cursor.close()
     return amt_paid
 
@@ -260,6 +261,7 @@ def get_client_invoice(client_id):
     cursor = current_app.db.execute(query, {"client_id": client_id})
     contact_name, email, phone, address, terms = cursor.fetchone()
     amt_paid = get_invoice_payments(invoice[0])
+
     final_invoice = [invoice_no, contact_name, email, phone, address, issue_date, due_date, terms, status, currency, round(subtotal, 2), round(tax_amount * 100, 2), round(total, 2), amt_paid, round(balance, 2)]
 
     query = """SELECT hours, ot_hours, bill_rate, amount, timesheet_id FROM invoice_item WHERE invoice_id = :invoice_id;"""
