@@ -28,7 +28,6 @@ To run this project locally:
 
 
 ## Future Improvements
-* Improve overall UI/UX and visual design
-* Prevent students from registering for multiple courses in the same time slot
-* Enforce prerequisite and corequisite checks during registration
-* Add authentication and student-specific dashboards
+* Implement employee payment processing and payroll functionality
+* Add role-based access control for different user types
+* Improve UI/UX and error handling
