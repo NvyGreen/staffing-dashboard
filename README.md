@@ -7,9 +7,9 @@ This repository serves as a functional prototype and proof of concept rather tha
 
 
 ## Tech Stack
-Frontend: HTML/CSS
-Backend: Python (Flask)
-Database: MySQL
+Frontend: HTML/CSS  
+Backend: Python (Flask)  
+Database: SQLite  
 
 
 ## Features
