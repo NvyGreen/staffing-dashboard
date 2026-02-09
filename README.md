@@ -21,7 +21,7 @@ Through this platform, managers can:
 
 ## Running Locally
 To run this project locally:
-1. Ensure Python (3.9+) and MySQL are installed on your machine.
+1. Ensure Python (3.9+) and SQLite are installed on your machine.
 2. Clone the repository and navigate to the project directory.
 3. Create and activate a virtual environment, then install the required dependencies.
 4. Create .env and .flaskenv files in the root directory to store environment variables such as the Flask configuration, secret key, and database connection details.
@@ -32,7 +32,7 @@ To run this project locally:
 
 ### Database Setup
 - The application uses a relational database with tables representing clients, job postings, candidates, placements, and invoices.
-- Create a MySQL database for the application.
+- Create a SQLite database for the application.
 - Database tables are created manually during development.
 - A formal schema or migration setup is planned as a future improvement.
 
