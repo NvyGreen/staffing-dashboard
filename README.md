@@ -44,9 +44,7 @@ Through this platform, users can:
 
 ## Screenshots
 <img src="screenshots/clients.png" alt="Clients page" width=500> <img src="screenshots/new-client.png" alt="New Client page" width=500>
-<img src="screenshots/edit-client.png" alt="Edit Client page" width=500> <img src="screenshots/employees.png" alt="Employees page" width=500>
-<img src="screenshots/jobs.png" alt="Jobs page" width=500> <img src="screenshots/placements.png" alt="Placements page" width=500>
-<img src="screenshots/new-placement.png" alt="New Placement page" width=500> <img src="screenshots/see-invoice.png" alt="See Invoice page" width=500>
+<img src="screenshots/see-invoice.png" alt="See Invoice page" width=500>
 
 
 ## Architecture Overview
